@@ -9,6 +9,7 @@ import SwiftUI
 import ServiceManagement
 
 struct FinishSetupView: View {
+    @Environment(\.openSettings) private var openSettings
     @Binding var path: NavigationPath
     
     func finishSetup() {
@@ -47,7 +48,7 @@ struct FinishSetupView: View {
                     finishSetup()
                     
                     // Open settings window
-                    NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+                    openSettings()
                 }
                 .controlSize(.large)
                 .padding(.trailing, 5)

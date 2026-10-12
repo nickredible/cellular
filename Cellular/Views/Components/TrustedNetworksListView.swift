@@ -103,7 +103,6 @@ struct TrustedNetworksListView: View {
                 .frame(width: 400, alignment: .leading)
             })
             .buttonStyle(.borderless)
-            .keyboardShortcut(KeyEquivalent.return, modifiers: [])
             Button {
                 let prevSelectedNetworkIndex = selectedNetworkIndex!
                 selectedNetworkIndex = nil

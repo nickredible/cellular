@@ -27,7 +27,7 @@ struct MenuBarContentView: View {
     @AppStorage("seePhoneInfo") var seePhoneInfo = true
     
     func getError() -> String {
-        var reason: FailedToStartReason = .LocationPermissionNotGranted
+        let reason: FailedToStartReason
         
         if locationModel.isLocationPermissionDenied {
             reason = .LocationPermissionNotGranted
@@ -39,6 +39,9 @@ struct MenuBarContentView: View {
             reason = .BluetoothNotSupported
         } else if bluetoothModel.isBluetoothUnknownErrorDialogPresented {
             reason = .UnknownBluetoothError
+        } else {
+            // No error has been reported, Bluetooth just hasn't finished starting yet
+            return "Starting Bluetooth…"
         }
         
         return getShortDescriptionForFailedToStart(reason: reason)
