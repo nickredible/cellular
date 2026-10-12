@@ -283,7 +283,6 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
               bluetoothModel.isConnectedToHotspot,
               !userRecentlyConnectedWhileOnTrustedNetwork,
               !isConnectingToTrustedNetwork,
-              let trustedPassword = Keychain.trustedNetworkPasswords[trustedSSID],
               let network = networks.first(where: { $0.ssid == trustedSSID }) else { return }
         
         // Don't repeatedly try a network that recently failed, since each attempt drops the hotspot connection
@@ -293,6 +292,7 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
         
         print("Found trusted network!")
         isConnectingToTrustedNetwork = true
+        let trustedPassword = Keychain.trustedNetworkPasswords[trustedSSID] ?? ""
         let hotspotSSID = ssid
         let hotspotPassword = password
         
@@ -300,7 +300,7 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
             var isConnected = false
             
             do {
-                try cwInterface.associate(to: network, password: trustedPassword)
+                try associate(toTrustedNetwork: network, password: trustedPassword)
                 isConnected = true
             } catch {
                 print("Failed to associate to trusted network \(trustedSSID): \(error.localizedDescription)")
@@ -329,6 +329,25 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
                     trustedNetworkFailureDates[trustedSSID] = Date()
                 }
             }
+        }
+    }
+    
+    /**
+     This function joins a trusted network. Trusted networks without a password, like eduroam, are joined with the settings macOS has saved for them, such as an 802.1X profile, since there's no single password to store.
+     - parameter network: The trusted network to join
+     - parameter password: The trusted network's password, or an empty string to use the settings macOS has saved
+     */
+    private func associate(toTrustedNetwork network: CWNetwork, password: String) throws {
+        if !password.isEmpty {
+            try cwInterface.associate(to: network, password: password)
+            return
+        }
+        
+        let enterpriseSecurities: [CWSecurity] = [.dynamicWEP, .wpaEnterprise, .wpaEnterpriseMixed, .wpa2Enterprise, .enterprise, .wpa3Enterprise]
+        if enterpriseSecurities.contains(where: { network.supportsSecurity($0) }) {
+            try cwInterface.associate(toEnterpriseNetwork: network, identity: nil, username: nil, password: nil)
+        } else {
+            try cwInterface.associate(to: network, password: nil)
         }
     }
     
