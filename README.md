@@ -18,14 +18,6 @@ Cellular is a utility that brings your Mac and your Android phone closer togethe
 
 On Android 16 and later, apps can no longer turn on the hotspot by themselves. Cellular Companion uses [Shizuku](https://shizuku.rikka.app/) to do it if you have it set up, and otherwise asks you to turn on the hotspot when your Mac needs it.
 
-# Screenshots
-
-<p>
-    <img src="screenshots/screenshot_1.jpg" width=1000/>
-    <img src="screenshots/screenshot_2.jpg" width=1000/>
-    <img src="screenshots/screenshot_3.jpg" width=1000/>
-</p>
-
 # Download
 
 **Option 1: Compile from source**
