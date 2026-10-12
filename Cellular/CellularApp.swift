@@ -89,18 +89,23 @@ func getIdentifierForFailedToStart(reason: FailedToStartReason) -> String {
  This function displays the about panel.
  */
 func openAboutPanel() {
+    let sourceURL = "https://github.com/nickredible/cellular"
+    let credits = NSMutableAttributedString(
+        string: "Cellular was created by Xuan Han Tan. This fork is by nickredible.\n\nThis program is free software under the GNU General Public License v3, and comes with no warranty. Its source code is available at \(sourceURL).",
+        attributes: [
+            NSAttributedString.Key.font: NSFont.systemFont(ofSize: NSFont.labelFontSize),
+            NSAttributedString.Key.foregroundColor: NSColor.labelColor,
+        ]
+    )
+    credits.addAttribute(.link, value: URL(string: sourceURL)!, range: (credits.string as NSString).range(of: sourceURL))
+    
     NSApplication.shared.orderFrontStandardAboutPanel(
         options: [
             NSApplication.AboutPanelOptionKey.version: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String,
-            NSApplication.AboutPanelOptionKey.credits: NSAttributedString(
-                string: "This app was developed by Xuan Han Tan. I hope you find it useful! If you want to learn more about me and my other projects, visit my website. If you have any questions, feel free to contact me by email.",
-                attributes: [
-                    NSAttributedString.Key.font: NSFont.systemFont(ofSize: NSFont.labelFontSize),
-                ]
-            ),
+            NSApplication.AboutPanelOptionKey.credits: credits,
             NSApplication.AboutPanelOptionKey(
                 rawValue: "Copyright"
-            ): "© Xuan Han Tan 2023. All rights reserved.",
+            ): "© 2023 Xuan Han Tan, © 2026 nickredible",
         ]
     )
 }
