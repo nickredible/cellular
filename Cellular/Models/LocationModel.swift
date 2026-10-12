@@ -15,6 +15,7 @@ class LocationModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     private var onAuthorized: () -> Void = {}
     private var onError: () -> Void = {}
+    private var authorizationStatus: CLAuthorizationStatus?
     
     @Published var isLocationPermissionDenied = true
     
@@ -31,29 +32,39 @@ class LocationModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     func registerForAuthorizationChanges(onAuthorized: @escaping () -> Void, onError: @escaping () -> Void) {
         self.onAuthorized = onAuthorized
         self.onError = onError
+        
+        // The authorisation status may have been delivered before these methods were registered
+        if let authorizationStatus {
+            handleAuthorizationStatus(authorizationStatus)
+        }
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        switch manager.authorizationStatus {
+        authorizationStatus = manager.authorizationStatus
+        handleAuthorizationStatus(manager.authorizationStatus)
+    }
+    
+    private func handleAuthorizationStatus(_ status: CLAuthorizationStatus) {
+        switch status {
         case .authorized:           // Location services are available.
             isLocationPermissionDenied = false
             onAuthorized()
             break
-            
+        
         case .restricted, .denied:  // Location services currently unavailable.
             isLocationPermissionDenied = true
             onError()
             break
-            
+        
         case .notDetermined:        // Authorization not determined yet.
             if bluetoothModel.isSetupComplete {
                 isLocationPermissionDenied = true
                 onError()
             } else {
-                manager.requestWhenInUseAuthorization()
+                locationManager.requestWhenInUseAuthorization()
             }
             break
-            
+        
         default:
             break
         }

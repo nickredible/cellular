@@ -11,32 +11,25 @@ import UserNotifications
 
 let wlanModel = WLANModel()
 let bluetoothModel = BluetoothModel()
-var locationModel = {
+let locationModel = {
     let locationModel = LocationModel()
     
-    // Get local notification permission (this is run before applicationDidFinishLaunching)
-    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-        if success {
-            print("Notification permission granted (main).")
+    // Register for Location Services permission changes. This must happen synchronously so that the first authorisation status is never missed.
+    locationModel.registerForAuthorizationChanges {
+        if bluetoothModel.isSetupComplete {
+            // Remove all notifications related to failed to start because of missing Location Services permission
+            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ["location"])
+            
+            // Start Bluetooth
+            bluetoothModel.initializeBluetooth()
         }
-        
-        // Register for Location Services permission changes
-        locationModel.registerForAuthorizationChanges {
-            if bluetoothModel.isSetupComplete {
-                // Remove all notifications related to failed to start because of missing Location Services permission
-                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: ["location"])
-                
-                // Start Bluetooth
-                bluetoothModel.initializeBluetooth()
-            }
-        } onError: {
-            if bluetoothModel.isSetupComplete {
-                // Show notification to inform the user that Cellular has failed to start
-                showFailedToStartNotification(reason: .LocationPermissionNotGranted)
-                
-                // Disconnect device
-                bluetoothModel.dispose()
-            }
+    } onError: {
+        if bluetoothModel.isSetupComplete {
+            // Show notification to inform the user that Cellular has failed to start
+            showFailedToStartNotification(reason: .LocationPermissionNotGranted)
+            
+            // Disconnect device
+            bluetoothModel.dispose()
         }
     }
     return locationModel
@@ -112,12 +105,24 @@ func openAboutPanel() {
     )
 }
 
+/**
+ This function registers the default values of all settings. Settings are read both through `@AppStorage` (whose inline defaults only apply to that view) and directly from UserDefaults, so the defaults must be registered for both to agree.
+ */
+func registerDefaultSettings() {
+    UserDefaults.standard.register(defaults: [
+        "autoConnect": true,
+        "autoDisconnectWhenSleep": true,
+        "minimumBatteryLevel": 0,
+        "seePhoneInfo": true,
+        "useTrustedNetworks": true,
+    ])
+}
+
 func showFailedToStartNotification(reason: FailedToStartReason) {
     let content = UNMutableNotificationContent()
     content.title = "Failed to start Cellular"
     content.subtitle = getDescriptionForFailedToStart(reason: reason)
-    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-    let request = UNNotificationRequest(identifier: getIdentifierForFailedToStart(reason: reason), content: content, trigger: trigger)
+    let request = UNNotificationRequest(identifier: getIdentifierForFailedToStart(reason: reason), content: content, trigger: nil)
     UNUserNotificationCenter.current().add(request)
 }
 
@@ -132,6 +137,10 @@ struct CellularApp: App {
     @ObservedObject private var locationModel = Cellular.locationModel
     @State private var path = NavigationPath()
     @State private var isLocationPermissionDenied = false
+    
+    init() {
+        registerDefaultSettings()
+    }
     
     var body: some Scene {
         WindowGroup(id: "main") {
