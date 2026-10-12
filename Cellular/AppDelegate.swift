@@ -8,9 +8,8 @@
 import Foundation
 import AppKit
 import UserNotifications
-import CoreLocation
 
-class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, CLLocationManagerDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
     let defaults = UserDefaults.standard
     
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -49,24 +48,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, CLLocationMa
     @objc func onWakeNotification(notification: NSNotification) {
         print("Computer has woken up.")
         
-        let isAutoDisconnectWhenSleep = defaults.bool(forKey: "autoDisconnectWhenSleep")
+        isSleeping = false
         
-        if isAutoDisconnectWhenSleep {
-            isSleeping = false
-        }
+        // Make sure the phone can find this Mac again if the Bluetooth link dropped during sleep
+        bluetoothModel.handleWake()
+        
         wlanModel.evalAutoEnableHotspot()
     }
     
     @objc func onSleepNotification(notification: NSNotification) {
         print("Computer is going to sleep.")
         
-        let isAutoDisconnectWhenSleep = defaults.bool(forKey: "autoDisconnectWhenSleep")
+        // Never auto-enable the hotspot while asleep, regardless of the "disconnect when asleep" setting
+        isSleeping = true
         
-        if isAutoDisconnectWhenSleep {
-            if bluetoothModel.isConnectedToHotspot || bluetoothModel.isConnectingToHotspot {
-                bluetoothModel.disconnectFromHotspot()
-            }
-            isSleeping = true
+        let isAutoDisconnectWhenSleep = defaults.bool(forKey: "autoDisconnectWhenSleep")
+        if isAutoDisconnectWhenSleep && (bluetoothModel.isConnectedToHotspot || bluetoothModel.isConnectingToHotspot) {
+            bluetoothModel.disconnectFromHotspot()
         }
     }
     
