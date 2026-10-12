@@ -37,7 +37,7 @@ struct DownloadAppView: View {
                         .frame(width: 200, height: 200)
                         .padding(.bottom, 20)
                 }
-                Text("The Cellular Companion app will help your Mac connect to your Android device and control its mobile hotspot settings. Scan the QR code above with your phone to download the latest version from GitHub, or open this link on your phone:")
+                Text("The Cellular Companion app will help your Mac connect to your Android device and control its mobile hotspot settings. Scan the QR code above with your phone's camera to download the latest version from GitHub, or open this link on your phone. If you already have it, click Continue.")
                     .multilineTextAlignment(.center)
                     .padding(.bottom, 10)
                 Link("github.com/nickredible/cellular-companion/releases", destination: URL(string: Self.companionDownloadURL)!)
