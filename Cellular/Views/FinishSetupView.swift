@@ -36,7 +36,7 @@ struct FinishSetupView: View {
                     .frame(width: 340, height: 300)
                     .cornerRadius(6)
                     .padding(.bottom, 20)
-                Text("Thank you for your purchase!\n\nSee device information and configure your settings by opening the Cellular menu.")
+                Text("See device information and configure your settings by opening the Cellular menu.")
                     .multilineTextAlignment(.center)
                 Spacer()
             }
