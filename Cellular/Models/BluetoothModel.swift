@@ -8,7 +8,6 @@
 import Foundation
 import CoreBluetooth
 import CoreWLAN
-import HandySwift
 import UserNotifications
 
 extension Data {
@@ -39,6 +38,18 @@ extension Data {
             else { return nil }
             self.append(val1 << 4 + val2)
         }
+    }
+}
+
+extension String {
+    /**
+     This function generates a random alphanumeric string using the system's cryptographically secure random number generator.
+     - parameter length: The length of the string to generate
+     */
+    static func randomAlphanumeric(length: Int) -> String {
+        let characters = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+        var generator = SystemRandomNumberGenerator()
+        return String((0..<length).map { _ in characters.randomElement(using: &generator)! })
     }
 }
 
@@ -111,7 +122,7 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralDelegate, CBPeriph
         serviceUUID = CBUUID(nsuuid: UUID())
         defaults.set(serviceUUID!.uuidString, forKey: "serviceUUID")
         
-        sharedKey = String(randomWithLength: 32, allowedCharactersType: .alphaNumeric)
+        sharedKey = String.randomAlphanumeric(length: 32)
         defaults.set(sharedKey!, forKey: "sharedKey")
         
         initializeBluetooth()

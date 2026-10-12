@@ -127,9 +127,9 @@ struct CellularApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     @State private var menuBarItemPresented = false
-    @StateObject private var wlanModel = Cellular.wlanModel
-    @StateObject private var bluetoothModel = Cellular.bluetoothModel
-    @StateObject private var locationModel = Cellular.locationModel
+    @ObservedObject private var wlanModel = Cellular.wlanModel
+    @ObservedObject private var bluetoothModel = Cellular.bluetoothModel
+    @ObservedObject private var locationModel = Cellular.locationModel
     @State private var path = NavigationPath()
     @State private var isLocationPermissionDenied = false
     
@@ -154,7 +154,7 @@ struct CellularApp: App {
                         }
                     }
             }
-            .onChange(of: locationModel.isLocationPermissionDenied) { isLocationPermissionDenied in
+            .onChange(of: locationModel.isLocationPermissionDenied) { _, isLocationPermissionDenied in
                 self.isLocationPermissionDenied = isLocationPermissionDenied
             }
             .alert("Turn on Bluetooth", isPresented: $bluetoothModel.isBluetoothOffDialogPresented) {
@@ -180,7 +180,7 @@ struct CellularApp: App {
                 if !bluetoothModel.isSetupComplete {
                     // Make app a regular app to show the setup window
                     NSApp.setActivationPolicy(.regular)
-                    NSApp.activate(ignoringOtherApps: true)
+                    NSApp.activate()
                 }
                 
                 bluetoothModel.registerResetCompletionHandler {
@@ -191,7 +191,7 @@ struct CellularApp: App {
                     
                     // Make app a regular app to show the setup window
                     NSApp.setActivationPolicy(.regular)
-                    NSApp.activate(ignoringOtherApps: true)
+                    NSApp.activate()
                     
                     // Go back to first page (StartView) in navigation stack
                     path.removeLast(path.count)
@@ -229,7 +229,7 @@ struct CellularApp: App {
                 MenuBarIconView(bluetoothModel: bluetoothModel)
             }
         )
-        .menuBarExtraStyle(.window)
         .menuBarExtraAccess(isPresented: $menuBarItemPresented)
+        .menuBarExtraStyle(.window)
     }
 }

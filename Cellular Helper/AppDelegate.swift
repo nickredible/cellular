@@ -15,15 +15,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             $0.bundleIdentifier == "com.xuanhan.cellular"
         }
         
-        if !isRunning {
-            var path = Bundle.main.bundlePath as NSString
-            for _ in 1...4 {
-                path = path.deletingLastPathComponent as NSString
-            }
-            NSWorkspace.shared.launchApplication(path as String)
+        guard !isRunning else {
+            NSApplication.shared.terminate(self)
+            return
         }
         
-        NSApplication.shared.terminate(self)
+        // The helper lives at Cellular.app/Contents/Library/LoginItems/Cellular Helper.app
+        var appURL = Bundle.main.bundleURL
+        for _ in 1...4 {
+            appURL.deleteLastPathComponent()
+        }
+        
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.activates = false
+        NSWorkspace.shared.openApplication(at: appURL, configuration: configuration) { _, error in
+            if let error {
+                print("Failed to launch Cellular: \(error.localizedDescription)")
+            }
+            
+            // Only quit once the launch request has been handled
+            DispatchQueue.main.async {
+                NSApplication.shared.terminate(self)
+            }
+        }
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {

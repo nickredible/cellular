@@ -11,7 +11,7 @@ struct StartView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @Binding var path: NavigationPath
-    @StateObject private var locationModel = Cellular.locationModel
+    @ObservedObject private var locationModel = Cellular.locationModel
     
     var body: some View {
         VStack {

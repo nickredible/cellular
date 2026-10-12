@@ -11,7 +11,7 @@ import CoreLocation
 struct SettingUpView: View {
     @Binding var path: NavigationPath
     
-    @StateObject private var bluetoothModel = Cellular.bluetoothModel
+    @ObservedObject private var bluetoothModel = Cellular.bluetoothModel
     
     var body: some View {
         VStack {
@@ -27,7 +27,7 @@ struct SettingUpView: View {
         }
         .padding(.all, 30)
         .frame(width: 900, height: 650, alignment: .center)
-        .onChange(of: bluetoothModel.isSetupComplete) { newValue in
+        .onChange(of: bluetoothModel.isSetupComplete) { _, newValue in
             if newValue {
                 if locationModel.isLocationPermissionDenied {
                     showFailedToStartNotification(reason: .LocationPermissionNotGranted)

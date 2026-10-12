@@ -79,30 +79,16 @@ struct MenuBarContentView: View {
                             .font(.title2)
                             .fontWeight(.semibold)
                         Spacer()
-                        if #available(macOS 14, *) {
-                            SettingsLink {
-                                Image(systemName: "gearshape")
-                                    .font(.title2)
-                                    .foregroundColor(.primary)
-                                    .padding(.bottom, 1)
-                            }
-                            .buttonStyle(.plain)
-                            .simultaneousGesture(TapGesture().onEnded{
-                                isMenuBarItemPresented = false
-                            })
-                        } else {
-                            Button {
-                                isMenuBarItemPresented = false
-                                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-                                NSApp.activate(ignoringOtherApps: true)
-                            } label: {
-                                Image(systemName: "gearshape")
-                                    .font(.title2)
-                                    .foregroundColor(.primary)
-                                    .padding(.bottom, 1)
-                            }
-                            .buttonStyle(.plain)
+                        SettingsLink {
+                            Image(systemName: "gearshape")
+                                .font(.title2)
+                                .foregroundStyle(.primary)
+                                .padding(.bottom, 1)
                         }
+                        .buttonStyle(.plain)
+                        .simultaneousGesture(TapGesture().onEnded{
+                            isMenuBarItemPresented = false
+                        })
                     }
                     .padding(.bottom, 30)
                     HStack(spacing: 0) {

@@ -41,7 +41,7 @@ struct SettingsView: View {
                                 Text("Connect when known Wi-Fi networks are unavailable")
                             }
                             .toggleStyle(.switch)
-                            .onChange(of: isAutoConnect) { isAutoConnect in
+                            .onChange(of: isAutoConnect) { _, isAutoConnect in
                                 if isAutoConnect {
                                     wlanModel.evalAutoEnableHotspot(immediate: true)
                                 }
@@ -69,7 +69,7 @@ struct SettingsView: View {
                                 Text("Allow your Mac to display your phone’s network signal strength, mobile network type and battery level. This will consume more energy on both devices.")
                             }
                             .toggleStyle(.switch)
-                            .onChange(of: seePhoneInfo) { seePhoneInfo in
+                            .onChange(of: seePhoneInfo) { _, seePhoneInfo in
                                 if seePhoneInfo {
                                     bluetoothModel.enableSeePhoneInfo()
                                 } else {

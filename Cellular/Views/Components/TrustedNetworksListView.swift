@@ -126,11 +126,11 @@ struct TrustedNetworksListView: View {
             trustedNetworkSSIDs = defaults.stringArray(forKey: "trustedNetworks") ?? []
             trustedNetworkPasswords = defaults.stringArray(forKey: "trustedNetworkPasswords") ?? []
         }
-        .onChange(of: trustedNetworkSSIDs) { newValue in
+        .onChange(of: trustedNetworkSSIDs) { _, newValue in
             defaults.set(trustedNetworkSSIDs, forKey: "trustedNetworks")
             defaults.set(trustedNetworkPasswords, forKey: "trustedNetworkPasswords")
         }
-        .onChange(of: useTrustedNetworks) { newValue in
+        .onChange(of: useTrustedNetworks) { _, newValue in
             if !newValue {
                 selectedNetworkIndex = nil
                 isAdding = false

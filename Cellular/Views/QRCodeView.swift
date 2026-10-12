@@ -11,8 +11,8 @@ struct QRCodeView: View {
     @Binding var path: NavigationPath
     
     @State private var qrCodeNSImage: NSImage?
-    @StateObject private var bluetoothModel = Cellular.bluetoothModel
-    @StateObject private var locationModel = Cellular.locationModel
+    @ObservedObject private var bluetoothModel = Cellular.bluetoothModel
+    @ObservedObject private var locationModel = Cellular.locationModel
     
     private func generateQRCode() {
         do {
@@ -85,14 +85,14 @@ struct QRCodeView: View {
                 generateQRCode()
             }
         }
-        .onChange(of: bluetoothModel.isHelloWorldReceived) { newValue in
+        .onChange(of: bluetoothModel.isHelloWorldReceived) { _, newValue in
             if newValue {
                 DispatchQueue.main.async {
                     path.append("settingUpView")
                 }
             }
         }
-        .onChange(of: locationModel.isLocationPermissionDenied) { newValue in
+        .onChange(of: locationModel.isLocationPermissionDenied) { _, newValue in
             if newValue {
                 qrCodeNSImage = nil
             } else {
