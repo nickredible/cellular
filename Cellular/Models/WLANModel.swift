@@ -268,7 +268,6 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
         guard let networks = cwInterface.cachedScanResults() else { return }
         
         let trustedNetworkSSIDs = defaults.stringArray(forKey: "trustedNetworks") ?? []
-        let trustedNetworkPasswords = defaults.stringArray(forKey: "trustedNetworkPasswords") ?? []
         
         // Find the first trusted network in range, in the order the user added them
         guard let trustedNetworkIndex = trustedNetworkSSIDs.firstIndex(where: { trustedSSID in networks.contains { $0.ssid == trustedSSID } }) else {
@@ -284,7 +283,7 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
               bluetoothModel.isConnectedToHotspot,
               !userRecentlyConnectedWhileOnTrustedNetwork,
               !isConnectingToTrustedNetwork,
-              trustedNetworkIndex < trustedNetworkPasswords.count,
+              let trustedPassword = Keychain.trustedNetworkPasswords[trustedSSID],
               let network = networks.first(where: { $0.ssid == trustedSSID }) else { return }
         
         // Don't repeatedly try a network that recently failed, since each attempt drops the hotspot connection
@@ -294,7 +293,6 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
         
         print("Found trusted network!")
         isConnectingToTrustedNetwork = true
-        let trustedPassword = trustedNetworkPasswords[trustedNetworkIndex]
         let hotspotSSID = ssid
         let hotspotPassword = password
         

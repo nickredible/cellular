@@ -64,7 +64,7 @@ struct TrustedNetworksListView: View {
                         Text("Add trusted network")
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("Network names and passwords are stored locally on your Mac. Your phone's hotspot name must not be set as a trusted network.")
+                        Text("Network names and passwords are stored locally on your Mac, with passwords kept in your keychain. Your phone's hotspot name must not be set as a trusted network.")
                             .font(.subheadline)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         Form {
@@ -123,11 +123,12 @@ struct TrustedNetworksListView: View {
         .disabled(!useTrustedNetworks)
         .onAppear {
             trustedNetworkSSIDs = defaults.stringArray(forKey: "trustedNetworks") ?? []
-            trustedNetworkPasswords = defaults.stringArray(forKey: "trustedNetworkPasswords") ?? []
+            let storedPasswords = Keychain.trustedNetworkPasswords
+            trustedNetworkPasswords = trustedNetworkSSIDs.map { storedPasswords[$0] ?? "" }
         }
         .onChange(of: trustedNetworkSSIDs) { _, newValue in
             defaults.set(trustedNetworkSSIDs, forKey: "trustedNetworks")
-            defaults.set(trustedNetworkPasswords, forKey: "trustedNetworkPasswords")
+            Keychain.trustedNetworkPasswords = Dictionary(zip(trustedNetworkSSIDs, trustedNetworkPasswords), uniquingKeysWith: { _, last in last })
         }
         .onChange(of: useTrustedNetworks) { _, newValue in
             if !newValue {

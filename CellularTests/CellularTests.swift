@@ -91,6 +91,19 @@ final class CellularTests: XCTestCase {
         XCTAssertNil(BluetoothModel.parseHotspotDetails(parts: BluetoothModel.splitPayload(payload), sharedKey: sharedKey))
     }
 
+    func testKeychainRoundTrip() {
+        let key = "test-\(UUID().uuidString)"
+        defer { Keychain.removeValue(forKey: key) }
+        
+        XCTAssertNil(Keychain.string(forKey: key))
+        XCTAssertTrue(Keychain.set("first", forKey: key))
+        XCTAssertEqual(Keychain.string(forKey: key), "first")
+        XCTAssertTrue(Keychain.set("second", forKey: key))
+        XCTAssertEqual(Keychain.string(forKey: key), "second")
+        Keychain.removeValue(forKey: key)
+        XCTAssertNil(Keychain.string(forKey: key))
+    }
+    
     func testRandomAlphanumeric() {
         let value = String.randomAlphanumeric(length: 32)
         XCTAssertEqual(value.count, 32)

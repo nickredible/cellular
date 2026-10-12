@@ -20,7 +20,7 @@ struct TrustedNetworkSetupView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(.bottom, 20)
-                Text("When you add trusted networks, your Mac can switch from your phone's hotspot to your trusted networks automatically when they are available, saving energy and improving battery life. Network names and passwords are stored locally on your Mac. You can always set this up later in Settings.")
+                Text("When you add trusted networks, your Mac can switch from your phone's hotspot to your trusted networks automatically when they are available, saving energy and improving battery life. Network names and passwords are stored locally on your Mac, with passwords kept in your keychain. You can always set this up later in Settings.")
                     .multilineTextAlignment(.center)
                     .padding(.bottom, 40)
                 Form {
