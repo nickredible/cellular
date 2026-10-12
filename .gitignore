@@ -4,3 +4,4 @@ DerivedData/
 build/
 *.xcuserstate
 Config/Local.xcconfig
+/build/

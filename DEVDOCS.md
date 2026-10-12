@@ -94,4 +94,10 @@ Notification characteristic messages:
 
 Once a day, `UpdateModel` asks GitHub for the latest release of `nickredible/cellular` and compares its tag with the app's version (`MARKETING_VERSION`), ignoring a leading "v". If the release is newer, Cellular shows it in the menu bar and posts a notification once per version that opens the release page. Nothing is downloaded or installed automatically. Users can turn this off in Settings.
 
-To release a version, set `MARKETING_VERSION` to it, then publish a GitHub release whose tag is that version (e.g. `1.1.0` or `v1.1.0`). Pre-releases and drafts are not offered as updates.
+To release a version:
+
+1. Set `MARKETING_VERSION` to it.
+2. Run `scripts/build-release.sh`, which builds `build/Cellular-<version>.zip`.
+3. Publish a GitHub release whose tag is that version (e.g. `1.1.0` or `v1.1.0`) with the zip attached. Pre-releases and drafts are not offered as updates.
+
+Releases are signed with a self-signed code signing certificate called "nickredible" instead of an Apple team, so they don't contain the Apple ID or team of whoever built them (`codesign -dv` shows a Personal Team build's Apple ID email). Set `CELLULAR_SIGNING_IDENTITY` to use another certificate. Every release must be signed with the same certificate: macOS ties Cellular's keychain items and its Bluetooth and Location permissions to it. Keep a backup of it (Keychain Access → My Certificates → nickredible → Export). Since the certificate isn't from Apple, macOS blocks the first launch of a downloaded copy until the user clicks Open Anyway.
