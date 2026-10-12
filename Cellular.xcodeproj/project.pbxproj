@@ -11,7 +11,7 @@
 		1928BBE02A35B1030029BB8C /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1928BBDF2A35B1030029BB8C /* StartView.swift */; };
 		1928BBE72A3610DF0029BB8C /* DownloadAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1928BBE62A3610DF0029BB8C /* DownloadAppView.swift */; };
 		1928BBEB2A371C0C0029BB8C /* AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1928BBEA2A371C0C0029BB8C /* AES.swift */; };
-		C311A1A0000000000000C0F4 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311A1A0000000000000C0F3 /* Keychain.swift */; };
+		C311A1A0000000000000C0F4 /* SecretStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311A1A0000000000000C0F3 /* SecretStore.swift */; };
 		1928BBF52A374F360029BB8C /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1928BBF42A374F360029BB8C /* QRCodeView.swift */; };
 		1959D9C72A46A711001BBE0F /* FinishSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1959D9C62A46A711001BBE0F /* FinishSetupView.swift */; };
 		1959D9C92A46AC03001BBE0F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1959D9C82A46AC03001BBE0F /* SettingsView.swift */; };
@@ -91,7 +91,7 @@
 		1928BBDF2A35B1030029BB8C /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
 		1928BBE62A3610DF0029BB8C /* DownloadAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAppView.swift; sourceTree = "<group>"; };
 		1928BBEA2A371C0C0029BB8C /* AES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES.swift; sourceTree = "<group>"; };
-		C311A1A0000000000000C0F3 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		C311A1A0000000000000C0F3 /* SecretStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretStore.swift; sourceTree = "<group>"; };
 		1928BBF42A374F360029BB8C /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		1959D9C62A46A711001BBE0F /* FinishSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishSetupView.swift; sourceTree = "<group>"; };
 		1959D9C82A46AC03001BBE0F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -187,7 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				1928BBEA2A371C0C0029BB8C /* AES.swift */,
-				C311A1A0000000000000C0F3 /* Keychain.swift */,
+				C311A1A0000000000000C0F3 /* SecretStore.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -595,7 +595,7 @@
 				1959D9CB2A46E68F001BBE0F /* AppDelegate.swift in Sources */,
 				19B5E6482AA2F78600031257 /* LocationModel.swift in Sources */,
 				1928BBEB2A371C0C0029BB8C /* AES.swift in Sources */,
-				C311A1A0000000000000C0F4 /* Keychain.swift in Sources */,
+				C311A1A0000000000000C0F4 /* SecretStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

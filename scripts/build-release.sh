@@ -3,7 +3,7 @@
 #
 # Releases are signed with a self-signed certificate (by default "nickredible") instead of an Apple team, so they don't
 # carry the Apple ID or team of whoever builds them. Use the same certificate for every release: macOS ties Cellular's
-# keychain items and its Bluetooth and Location permissions to it, so a different one makes users grant them again.
+# Bluetooth and Location permissions to it, so a different one makes users grant them again.
 set -eu
 
 identity="${CELLULAR_SIGNING_IDENTITY:-nickredible}"

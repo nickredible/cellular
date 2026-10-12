@@ -301,7 +301,7 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
         
         print("Found trusted network!")
         isConnectingToTrustedNetwork = true
-        let trustedPassword = Keychain.trustedNetworkPasswords[trustedSSID] ?? ""
+        let trustedPassword = SecretStore.trustedNetworkPasswords[trustedSSID] ?? ""
         let hotspotSSID = ssid
         let hotspotPassword = password
         

@@ -141,12 +141,12 @@ struct TrustedNetworksListView: View {
         .disabled(!useTrustedNetworks)
         .onAppear {
             trustedNetworkSSIDs = defaults.stringArray(forKey: "trustedNetworks") ?? []
-            let storedPasswords = Keychain.trustedNetworkPasswords
+            let storedPasswords = SecretStore.trustedNetworkPasswords
             trustedNetworkPasswords = trustedNetworkSSIDs.map { storedPasswords[$0] ?? "" }
         }
         .onChange(of: trustedNetworkSSIDs) { _, newValue in
             defaults.set(trustedNetworkSSIDs, forKey: "trustedNetworks")
-            Keychain.trustedNetworkPasswords = Dictionary(zip(trustedNetworkSSIDs, trustedNetworkPasswords), uniquingKeysWith: { _, last in last })
+            SecretStore.trustedNetworkPasswords = Dictionary(zip(trustedNetworkSSIDs, trustedNetworkPasswords), uniquingKeysWith: { _, last in last })
         }
         .onChange(of: useTrustedNetworks) { _, newValue in
             if !newValue {

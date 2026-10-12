@@ -140,7 +140,7 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
         self.serviceUUID = serviceUUID
         self.sharedKey = sharedKey
         defaults.set(serviceUUID.uuidString, forKey: "serviceUUID")
-        Keychain.set(sharedKey, forKey: Keychain.sharedKeyKey)
+        SecretStore.set(sharedKey, forKey: SecretStore.sharedKeyKey)
         
         // The service UUID has changed, so the old peripheral manager (if any) must not keep advertising
         tearDownPeripheralManager()
@@ -171,7 +171,7 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
             serviceUUID = CBUUID(string: serviceUUIDString)
         }
         if sharedKey == nil {
-            sharedKey = Keychain.string(forKey: Keychain.sharedKeyKey)
+            sharedKey = SecretStore.string(forKey: SecretStore.sharedKeyKey)
             
             if sharedKey == nil {
                 print("Error: Shared PIN not set, call prepareForNewConnection() first.")
@@ -187,7 +187,7 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
             }
         }
         
-        if let ssid = defaults.string(forKey: "ssid"), let password = Keychain.string(forKey: Keychain.hotspotPasswordKey) {
+        if let ssid = defaults.string(forKey: "ssid"), let password = SecretStore.string(forKey: SecretStore.hotspotPasswordKey) {
             wlanModel.setHotspotDetails(ssid: ssid, password: password)
         }
         
@@ -578,14 +578,14 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
     }
     
     /**
-     This function saves the provided hotspot SSID to UserDefaults and its password to the keychain.
+     This function saves the provided hotspot SSID to UserDefaults and its password to the secret store.
      - parameter ssid: The SSID of the hotspot
      - parameter password: The password of the hotspot
      */
     private func saveHotspotInfo(ssid: String, password: String) {
         wlanModel.setHotspotDetails(ssid: ssid, password: password)
         defaults.set(ssid, forKey: "ssid")
-        Keychain.set(password, forKey: Keychain.hotspotPasswordKey)
+        SecretStore.set(password, forKey: SecretStore.hotspotPasswordKey)
         
         print("Saved hotspot info for \(ssid)")
     }
@@ -885,8 +885,8 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
         defaults.removeObject(forKey: "centralUUID")
         defaults.removeObject(forKey: "isSetupComplete")
         defaults.removeObject(forKey: "ssid")
-        Keychain.removeValue(forKey: Keychain.sharedKeyKey)
-        Keychain.removeValue(forKey: Keychain.hotspotPasswordKey)
+        SecretStore.removeValue(forKey: SecretStore.sharedKeyKey)
+        SecretStore.removeValue(forKey: SecretStore.hotspotPasswordKey)
         
         // Get view to prepare for setup
         resetCompletionHandler?()
