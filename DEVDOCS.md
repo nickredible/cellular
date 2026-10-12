@@ -89,3 +89,9 @@ Notification characteristic messages:
 
 1. The Android device un-bonds from the Mac and clears the data store and variables.
 2. The Mac changes the shared PIN and deletes the service UUID, stops advertising the service and clears all variables. However, settings are not cleared.
+
+# Updates and releases
+
+Once a day, `UpdateModel` asks GitHub for the latest release of `nickredible/cellular` and compares its tag with the app's version (`MARKETING_VERSION`), ignoring a leading "v". If the release is newer, Cellular shows it in the menu bar and posts a notification once per version that opens the release page. Nothing is downloaded or installed automatically. Users can turn this off in Settings.
+
+To release a version, set `MARKETING_VERSION` to it, then publish a GitHub release whose tag is that version (e.g. `1.1.0` or `v1.1.0`). Pre-releases and drafts are not offered as updates.

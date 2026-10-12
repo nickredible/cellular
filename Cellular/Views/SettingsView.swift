@@ -17,6 +17,7 @@ struct SettingsView: View {
     @AppStorage("autoDisconnectWhenSleep") var isAutoDisconnectWhenSleep = true
     @AppStorage("minimumBatteryLevel") var minimumBatteryLevel = 0
     @AppStorage("seePhoneInfo") var seePhoneInfo = true
+    @AppStorage("checkForUpdates") var checkForUpdates = true
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -75,6 +76,16 @@ struct SettingsView: View {
                                 } else {
                                     bluetoothModel.disableSeePhoneInfo()
                                 }
+                            }
+                        }
+                        Section {
+                            Toggle(isOn: $checkForUpdates) {
+                                Text("Check for updates")
+                                Text("Check GitHub once a day for a newer version of Cellular.")
+                            }
+                            .toggleStyle(.switch)
+                            .onChange(of: checkForUpdates) { _, _ in
+                                updateModel.checkForUpdates()
                             }
                         }
                     }

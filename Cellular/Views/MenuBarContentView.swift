@@ -24,6 +24,7 @@ struct MenuBarContentView: View {
     @ObservedObject var bluetoothModel: BluetoothModel
     @ObservedObject var locationModel: LocationModel
     @Binding var isMenuBarItemPresented: Bool
+    @ObservedObject private var updateModel = Cellular.updateModel
     @AppStorage("seePhoneInfo") var seePhoneInfo = true
     
     func getError() -> String {
@@ -74,6 +75,24 @@ struct MenuBarContentView: View {
                 .padding(.vertical, 10)
                 .padding(.horizontal, 20)
                 .background(Color(hex: 0xA91C1C))
+            }
+            if let availableUpdate = updateModel.availableUpdate {
+                HStack {
+                    Image(systemName: "arrow.down.circle")
+                        .font(.title3)
+                        .padding(.trailing, 2)
+                    Text("Cellular \(availableUpdate.version) is available")
+                        .font(.title3)
+                        .padding(.bottom, 1)
+                    Spacer()
+                    Link("Download", destination: availableUpdate.url)
+                        .simultaneousGesture(TapGesture().onEnded{
+                            isMenuBarItemPresented = false
+                        })
+                }
+                .padding(.vertical, 10)
+                .padding(.horizontal, 20)
+                .background(Color.accentColor.opacity(0.2))
             }
             VStack {
                 if bluetoothModel.isSetupComplete {

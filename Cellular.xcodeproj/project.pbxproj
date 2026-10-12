@@ -33,6 +33,7 @@
 		19B4F8D82A49D66900AC2B90 /* MenuBarExtraAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 19B4F8D72A49D66900AC2B90 /* MenuBarExtraAccess */; };
 		19B5E6482AA2F78600031257 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B5E6472AA2F78600031257 /* LocationModel.swift */; };
 		19BA1A292A6D5E0300477517 /* WLANModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BA1A282A6D5E0300477517 /* WLANModel.swift */; };
+		C5CC6865830E1E827703D838 /* UpdateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF19F4AC5441E01AB28C8F7 /* UpdateModel.swift */; };
 		19BA1A2B2A6D6B9500477517 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 19BA1A2A2A6D6B9500477517 /* Main.storyboard */; };
 		19BDE0692A4878E300C038BA /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BDE0682A4878E300C038BA /* MenuBarContentView.swift */; };
 		19BDE06B2A4878ED00C038BA /* MenuBarIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BDE06A2A4878ED00C038BA /* MenuBarIconView.swift */; };
@@ -119,6 +120,7 @@
 		19A0ED512A2E240C00AF4A5F /* CellularUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellularUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		19B5E6472AA2F78600031257 /* LocationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		19BA1A282A6D5E0300477517 /* WLANModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLANModel.swift; sourceTree = "<group>"; };
+		7BF19F4AC5441E01AB28C8F7 /* UpdateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateModel.swift; sourceTree = "<group>"; };
 		19BA1A2A2A6D6B9500477517 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		19BDE0682A4878E300C038BA /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
 		19BDE06A2A4878ED00C038BA /* MenuBarIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarIconView.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 			children = (
 				1915C22E2A30938300A22788 /* BluetoothModel.swift */,
 				19BA1A282A6D5E0300477517 /* WLANModel.swift */,
+				7BF19F4AC5441E01AB28C8F7 /* UpdateModel.swift */,
 				19B5E6472AA2F78600031257 /* LocationModel.swift */,
 			);
 			path = Models;
@@ -576,6 +579,7 @@
 			files = (
 				198A7A1E2A45A4FA0097C0DD /* SettingUpView.swift in Sources */,
 				19BA1A292A6D5E0300477517 /* WLANModel.swift in Sources */,
+				C5CC6865830E1E827703D838 /* UpdateModel.swift in Sources */,
 				1928BBF52A374F360029BB8C /* QRCodeView.swift in Sources */,
 				1928BBE72A3610DF0029BB8C /* DownloadAppView.swift in Sources */,
 				19BDE0692A4878E300C038BA /* MenuBarContentView.swift in Sources */,

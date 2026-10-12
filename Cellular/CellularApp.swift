@@ -11,6 +11,7 @@ import UserNotifications
 
 let wlanModel = WLANModel()
 let bluetoothModel = BluetoothModel()
+let updateModel = UpdateModel()
 let locationModel = {
     let locationModel = LocationModel()
     
@@ -120,6 +121,7 @@ func registerDefaultSettings() {
         "minimumBatteryLevel": 0,
         "seePhoneInfo": true,
         "useTrustedNetworks": true,
+        "checkForUpdates": true,
     ])
 }
 

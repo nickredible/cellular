@@ -9,7 +9,7 @@ import Foundation
 import AppKit
 import UserNotifications
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
     let defaults = UserDefaults.standard
     
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -32,6 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             name: NSWorkspace.willSleepNotification, object: nil)
         
         // Get local notification permission
+        UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
             if success {
                 print("Notification permission granted (AppDelegate).")
@@ -39,6 +40,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 print(error.localizedDescription)
             }
         }
+        
+        updateModel.startChecking()
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        // Open the release page when the user clicks an update notification
+        if response.notification.request.identifier == UpdateModel.notificationIdentifier,
+           let urlString = response.notification.request.content.userInfo[UpdateModel.notificationURLKey] as? String,
+           let url = URL(string: urlString) {
+            NSWorkspace.shared.open(url)
+        }
+        completionHandler()
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {

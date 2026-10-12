@@ -41,7 +41,7 @@ To build under your own bundle identifiers, change `CELLULAR_BUNDLE_ID_PREFIX` i
 
 **Option 2: Download from GitHub Releases**
 
-Try Cellular immediately by downloading it from the [releases of this repository](https://github.com/nickredible/cellular/releases). Releases aren't notarized by Apple, so macOS blocks Cellular the first time you open it: open it once, then click **Open Anyway** in System Settings → Privacy & Security. You will have to update Cellular manually when a new version is released.
+Try Cellular immediately by downloading it from the [releases of this repository](https://github.com/nickredible/cellular/releases). Releases aren't notarized by Apple, so macOS blocks Cellular the first time you open it: open it once, then click **Open Anyway** in System Settings → Privacy & Security. Cellular checks for new releases once a day and lets you know when one is available, but you have to download and install it yourself. You can turn this off in Settings.
 
 # Looking for Cellular Companion?
 
