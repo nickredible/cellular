@@ -73,8 +73,8 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
     /// Network types sent by the Companion app. An empty string means the phone has no mobile data network.
     static let acceptableNetworkTypes: Set<String> = ["", "GPRS", "E", "3G", "4G", "5G", "5Ge", "5G+"]
     
-    /// How long to wait for the phone to report that its hotspot is on after asking it to turn the hotspot on
-    private let hotspotRequestTimeout: TimeInterval = 60
+    /// How long to wait for the phone to report that its hotspot is on after asking it to turn the hotspot on. On Android 16+ the user has to turn the hotspot on themselves, and the Companion app gives up after 2 minutes, so this is only a backstop.
+    private let hotspotRequestTimeout: TimeInterval = 150
     
     @Published private(set) var isPoweredOn = false
     @Published var isBluetoothOffDialogPresented = false
@@ -112,6 +112,9 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
         /// The battery level of the phone (0 to 100), -1 if unchanged
         var batteryLevel: Int
     }
+    
+    /// Phone info that carries no values, which the Companion app sends to announce that it has (re)connected
+    static let emptyPhoneInfo = PhoneInfo(signalLevel: -1, networkType: "-1", batteryLevel: -1)
     
     enum CommandType: String {
         case HelloWorld = "0"
@@ -333,21 +336,35 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
         }
         
         print("Central subscribed to characteristic \(characteristic.uuid.uuidString)")
+        
+        // Advertising is deliberately left on. If the link drops without CoreBluetooth reporting an unsubscription (which can happen across sleep), the phone must still be able to find this Mac again.
+        
+        handleDeviceConnected(central: central)
+    }
+    
+    /**
+     This function updates this model to reflect that the phone is connected and subscribed, and sends it the state it needs.
+     - parameter central: The phone
+     */
+    private func handleDeviceConnected(central: CBCentral) {
         connectedCentral = central
         isDeviceConnected = true
         pendingNotifications.removeAll()
         
-        // Advertising is deliberately left on. If the link drops without CoreBluetooth reporting an unsubscription (which can happen across sleep), the phone must still be able to find this Mac again.
+        guard isSetupComplete else { return }
         
-        if isSetupComplete {
-            // Enable seeing phone info if needed
-            if defaults.bool(forKey: "seePhoneInfo") {
-                enableSeePhoneInfo()
-            }
-            
-            // Evaluate whether Wi-Fi connection-based functions need to be run
-            wlanModel.evaluateLinkState()
+        // Enable seeing phone info if needed
+        if defaults.bool(forKey: "seePhoneInfo") {
+            enableSeePhoneInfo()
         }
+        
+        // A restarted Companion app doesn't know that this Mac is still on its hotspot
+        if isConnectedToHotspot {
+            updateCharacteristicValue(value: .IndicateConnectedHotspot)
+        }
+        
+        // Evaluate whether Wi-Fi connection-based functions need to be run
+        wlanModel.evaluateLinkState()
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
@@ -469,6 +486,16 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
             guard let phoneInfo = Self.parsePhoneInfo(parts: parts) else {
                 print("Error: Payload is invalid: \(payload)")
                 return .unlikelyError
+            }
+            
+            // The Companion app sends phone info without any values right after it subscribes. CoreBluetooth doesn't report a subscription from a central it still considers subscribed (e.g. when the Companion app restarts without the Bluetooth link dropping), so treat this as a reconnection and re-sync. Older Mac versions accept this payload and ignore it.
+            if phoneInfo == Self.emptyPhoneInfo {
+                print("Companion app connected, re-syncing state.")
+                signalLevel = -1
+                networkType = "-1"
+                batteryLevel = -1
+                handleDeviceConnected(central: request.central)
+                break
             }
             
             // Update UI with new phone info accordingly
@@ -684,7 +711,7 @@ class BluetoothModel: NSObject, ObservableObject, CBPeripheralManagerDelegate {
             // Let the user know that the hotspot could not be turned on
             let content = UNMutableNotificationContent()
             content.title = "Couldn't turn on hotspot"
-            content.subtitle = "Your phone didn't respond. Make sure Cellular Companion is running and Bluetooth is on."
+            content.subtitle = "Your phone's hotspot didn't turn on. Make sure Cellular Companion is running and Bluetooth is on."
             let request = UNNotificationRequest(identifier: "hotspotTimeout", content: content, trigger: nil)
             UNUserNotificationCenter.current().add(request)
         }

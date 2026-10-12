@@ -56,6 +56,11 @@ final class CellularTests: XCTestCase {
         XCTAssertEqual(phoneInfo, .init(signalLevel: -1, networkType: "-1", batteryLevel: -1))
     }
 
+    func testEmptyPhoneInfoIsRecognisedAsReconnection() {
+        // The Companion app announces a (re)connection with phone info that carries no values
+        XCTAssertEqual(BluetoothModel.parsePhoneInfo(parts: BluetoothModel.splitPayload("2 -1 -1 -1")), BluetoothModel.emptyPhoneInfo)
+    }
+    
     func testPhoneInfoRejectsMalformedPayload() {
         XCTAssertNil(BluetoothModel.parsePhoneInfo(parts: BluetoothModel.splitPayload("2 3 4G")))
     }
