@@ -8,9 +8,20 @@
 import SwiftUI
 
 struct DownloadAppView: View {
-    @Environment(\.openURL) private var openURL
-    
     @Binding var path: NavigationPath
+    
+    private static let companionDownloadURL = "https://github.com/nickredible/cellular-companion/releases/latest"
+    
+    /// A QR code of the companion's download page, for the user to scan with their phone
+    private let qrCodeNSImage: NSImage? = {
+        let filter = CIFilter(name: "CIQRCodeGenerator")!
+        filter.setValue(Data(companionDownloadURL.utf8), forKey: "inputMessage")
+        guard let ciImage = filter.outputImage else { return nil }
+        let representation = NSCIImageRep(ciImage: ciImage.transformed(by: CGAffineTransform(scaleX: 10, y: 10)))
+        let image = NSImage(size: representation.size)
+        image.addRepresentation(representation)
+        return image
+    }()
     
     var body: some View {
         VStack(spacing: 0) {
@@ -19,24 +30,17 @@ struct DownloadAppView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 Spacer()
-                Image(nsImage: NSImage(named: "AppIcon")!)
-                    .resizable()
-                    .frame(width: 200, height: 200)
-                    .padding(.bottom, 5)
-                Button {
-                    let url = URL(string: "https://play.google.com/store/apps/details?id=com.xuanhan.cellularcompanion")!
-                    openURL(url)
-                } label: {
-                    Image("play_badge")
+                if let qrCodeNSImage {
+                    Image(nsImage: qrCodeNSImage)
+                        .interpolation(.none)
                         .resizable()
-                        .frame(width: 207, height: 80)
+                        .frame(width: 200, height: 200)
+                        .padding(.bottom, 20)
                 }
-                .padding(.bottom, 20)
-                .buttonStyle(.plain)
-                Text("The Cellular Companion app will help your Mac connect to your Android device and control its mobile hotspot settings. Click the button above to open the Google Play Store.\n\n\nAlternatively, open this link on your phone:")
+                Text("The Cellular Companion app will help your Mac connect to your Android device and control its mobile hotspot settings. Scan the QR code above with your phone to download the latest version from GitHub, or open this link on your phone:")
                     .multilineTextAlignment(.center)
                     .padding(.bottom, 10)
-                Text("https://xuanhan.me/short/cellular-companion")
+                Link("github.com/nickredible/cellular-companion/releases", destination: URL(string: Self.companionDownloadURL)!)
                     .font(.title3)
                     .fontWeight(.bold)
                 Spacer()
