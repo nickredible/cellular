@@ -1,3 +1,5 @@
+This is a fork of [Cellular](https://github.com/XuanHanTan/cellular) by Xuan Han Tan, which is no longer updated. It has been modified since October 2026 to work with current versions of macOS and Android; see the commit history for the changes. Builds of this fork are not available on the Mac App Store.
+
 If you're looking for code documentation, view [this document](DEVDOCS.md) instead.
 
 # About
@@ -10,9 +12,11 @@ Cellular is a utility that brings your Mac and your Android phone closer togethe
 
 - Connect to mobile hotspot seamlessly when other Wi-Fi networks are not available
 - Disconnect from mobile hotspot automatically when computer is put to sleep
-- Disconnect from mobile hotspot automatically when trusted Wi-Fi networks are available
+- Disconnect from mobile hotspot automatically when trusted Wi-Fi networks are available, including ones without a shared password like eduroam
 - View phone information such as cell signal strength, network type and battery level from the menu bar of your Mac
 - Turn off hotspot automatically when phone battery is below a set limit
+
+On Android 16 and later, apps can no longer turn on the hotspot by themselves. Cellular Companion uses [Shizuku](https://shizuku.rikka.app/) to do it if you have it set up, and otherwise asks you to turn on the hotspot when your Mac needs it.
 
 # Screenshots
 
@@ -35,22 +39,21 @@ xcodebuild -project Cellular.xcodeproj -scheme Cellular -configuration Release -
 
 To build under your own bundle identifiers, change `CELLULAR_BUNDLE_ID_PREFIX` in `Config/Base.xcconfig`.
 
-**Option 2: Download for free from GitHub Releases**
+**Option 2: Download from GitHub Releases**
 
-Try Cellular immediately by downloading it from this repository. You will have to update Cellular manually when a new version is released.
-
-**Option 3: Purchase from the Mac App Store**
-
-Purchase Cellular for a fixed fee of USD 2.99 (prices vary in different countries) and receive automatic updates the moment they are released. By purchasing Cellular, you are supporting my future software development work and even greater projects!
-
-Download [here](https://apps.apple.com/app/cellular/id6463124697).
+Try Cellular immediately by downloading it from the [releases of this repository](https://github.com/nickredible/cellular/releases). Releases aren't notarized by Apple, so macOS blocks Cellular the first time you open it: open it once, then click **Open Anyway** in System Settings → Privacy & Security. You will have to update Cellular manually when a new version is released.
 
 # Looking for Cellular Companion?
 
-View the source code for Cellular Companion on [this repository](https://github.com/XuanHanTan/cellular-companion).
+Cellular needs the Cellular Companion app on your Android phone. Download it from the [Cellular Companion repository](https://github.com/nickredible/cellular-companion/releases), where its source code also lives.
 
 # Credits
 
-This app was designed and built by Xuan Han Tan. Learn more about me by visiting [my website](https://xuanhan.me/).
+Cellular was designed and built by Xuan Han Tan. This fork is by [nickredible](https://github.com/nickredible).
 
-© Xuan Han Tan 2023. All rights reserved.
+# License
+
+Copyright © 2023 Xuan Han Tan<br>
+Copyright © 2026 nickredible
+
+Cellular is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3 of the License. It is distributed in the hope that it will be useful, but without any warranty; without even the implied warranty of merchantability or fitness for a particular purpose. See [LICENSE](LICENSE) for details.
