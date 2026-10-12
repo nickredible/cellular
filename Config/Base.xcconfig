@@ -1,0 +1,10 @@
+// Shared build settings. Put your signing team in Config/Local.xcconfig (git-ignored), e.g.
+//   DEVELOPMENT_TEAM = ABCDE12345
+// See Config/Local.xcconfig.example.
+DEVELOPMENT_TEAM =
+
+// Every bundle identifier is derived from this prefix: <prefix>.cellular for the app and <prefix>.cellularhelper for
+// its login item. The app finds its helper by appending "helper" to its own identifier, so keep that pairing.
+CELLULAR_BUNDLE_ID_PREFIX = io.github.nickredible
+
+#include? "Local.xcconfig"

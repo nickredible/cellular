@@ -16,9 +16,9 @@ struct FinishSetupView: View {
         // Close setup window
         NSApplication.shared.keyWindow?.close()
         
-        // Register login item to auto-start app on startup
+        // Register login item to auto-start app on startup. The helper's identifier is this app's with "helper" appended.
         do {
-            try SMAppService.loginItem(identifier: "com.xuanhan.cellularhelper").register()
+            try SMAppService.loginItem(identifier: Bundle.main.bundleIdentifier! + "helper").register()
         } catch {
             print("Failed to register login item: \(error.localizedDescription)")
         }

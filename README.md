@@ -26,7 +26,14 @@ Cellular is a utility that brings your Mac and your Android phone closer togethe
 
 **Option 1: Compile from source**
 
-Verify the code and compile Cellular using Xcode 15 by yourself.
+Verify the code and compile Cellular by yourself. You need macOS 14 or later and a recent Xcode with an Apple ID signed in (a free Personal Team works).
+
+```sh
+cp Config/Local.xcconfig.example Config/Local.xcconfig   # then set DEVELOPMENT_TEAM to your team ID
+xcodebuild -project Cellular.xcodeproj -scheme Cellular -configuration Release -allowProvisioningUpdates build
+```
+
+To build under your own bundle identifiers, change `CELLULAR_BUNDLE_ID_PREFIX` in `Config/Base.xcconfig`.
 
 **Option 2: Download for free from GitHub Releases**
 

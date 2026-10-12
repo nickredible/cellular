@@ -17,7 +17,7 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
     private let defaults = UserDefaults.standard
     private let cwWiFiClient = CWWiFiClient.shared()
     private let cwInterface: CWInterface!
-    private let wifiQueue = DispatchQueue(label: "com.xuanhan.cellular.wlan", qos: .userInitiated)
+    private let wifiQueue = DispatchQueue(label: "WLANModel", qos: .userInitiated)
     
     /// Incremented whenever an in-flight connection attempt to the hotspot should be abandoned
     private var connectGeneration = 0

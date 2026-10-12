@@ -10,20 +10,20 @@ import AppKit
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        let runningApps = NSWorkspace.shared.runningApplications
-        let isRunning = runningApps.contains {
-            $0.bundleIdentifier == "com.xuanhan.cellular"
+        // The helper lives at Cellular.app/Contents/Library/LoginItems/Cellular Helper.app
+        var appURL = Bundle.main.bundleURL
+        for _ in 1...4 {
+            appURL.deleteLastPathComponent()
+        }
+        
+        let appBundleIdentifier = Bundle(url: appURL)?.bundleIdentifier
+        let isRunning = NSWorkspace.shared.runningApplications.contains {
+            $0.bundleIdentifier == appBundleIdentifier
         }
         
         guard !isRunning else {
             NSApplication.shared.terminate(self)
             return
-        }
-        
-        // The helper lives at Cellular.app/Contents/Library/LoginItems/Cellular Helper.app
-        var appURL = Bundle.main.bundleURL
-        for _ in 1...4 {
-            appURL.deleteLastPathComponent()
         }
         
         let configuration = NSWorkspace.OpenConfiguration()
