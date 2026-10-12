@@ -47,7 +47,7 @@ struct TrustedNetworksSettingsView: View {
                 Section {
                     Toggle(isOn: $useTrustedNetworks) {
                         Text("Trusted networks")
-                        Text("Allow your Mac to switch from your phone's hotspot to your trusted networks automatically when they are available. Network names and passwords are stored locally on your Mac, with passwords kept in your keychain.")
+                        Text("Allow your Mac to switch from your phone's hotspot to your trusted networks automatically when they are available. Choose from the networks your Mac has saved.")
                     }
                     .toggleStyle(.switch)
                     .controlSize(.large)

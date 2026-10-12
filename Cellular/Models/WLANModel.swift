@@ -52,6 +52,15 @@ class WLANModel: NSObject, ObservableObject, CWEventDelegate {
     }
     
     /**
+     The names of the networks macOS has saved, in the order it prefers them. Like any SSID, these can only be read with the Location Services permission.
+     */
+    var savedNetworkSSIDs: [String] {
+        let profiles = cwInterface.configuration()?.networkProfiles.array as? [CWNetworkProfile] ?? []
+        var seenSSIDs = Set<String>()
+        return profiles.compactMap(\.ssid).filter { seenSSIDs.insert($0).inserted }
+    }
+    
+    /**
      This function sets the hotspot details for later use.
      - parameter ssid: The SSID of the hotspot
      - parameter password: The password of the hotspot

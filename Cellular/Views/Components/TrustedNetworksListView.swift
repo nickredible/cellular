@@ -26,10 +26,18 @@ struct TrustedNetworksListView: View {
     @State private var trustedNetworkPasswords: [String] = []
     @State private var selectedNetworkIndex: Int?
     @State private var isAdding = false
-    @State private var tempAddName = ""
-    @State private var tempAddPassword = ""
+    @State private var savedNetworkSSIDs: [String] = []
+    @State private var searchText = ""
+    @State private var selectedSavedNetworkSSID: String?
     
     let defaults = UserDefaults.standard
+    
+    /// The saved networks that can be added: not already trusted, not the phone's hotspot, and matching the search
+    private var addableNetworkSSIDs: [String] {
+        savedNetworkSSIDs.filter { ssid in
+            ssid != wlanModel.ssid && !trustedNetworkSSIDs.contains(ssid) && (searchText.isEmpty || ssid.localizedCaseInsensitiveContains(searchText))
+        }
+    }
     
     var body: some View {
         List(selection: $selectedNetworkIndex) {
@@ -64,18 +72,24 @@ struct TrustedNetworksListView: View {
                         Text("Add trusted network")
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("Network names and passwords are stored locally on your Mac, with passwords kept in your keychain. Your phone's hotspot name must not be set as a trusted network.")
+                        Text("Choose a network your Mac has joined before, and it will join it with the settings it has saved. To add another network, join it once from the Wi-Fi menu first.")
                             .font(.subheadline)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Form {
-                            Section {
-                                TextField("Name:", text: $tempAddName)
-                                SecureField("Password:", text: $tempAddPassword)
-                                    .focusable(true)
+                        TextField("Search", text: $searchText)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.top, 15)
+                        List(addableNetworkSSIDs, id: \.self, selection: $selectedSavedNetworkSSID) { network in
+                            Text(network)
+                        }
+                        .listStyle(BorderedListStyle())
+                        .frame(height: 200)
+                        .overlay {
+                            if addableNetworkSSIDs.isEmpty {
+                                Text(savedNetworkSSIDs.isEmpty ? "Your Mac has no saved networks." : "No networks found.")
+                                    .foregroundColor(.secondary)
                             }
                         }
-                        .padding(.top, 15)
-                        .padding(.bottom, 10)
+                        .padding(.top, 5)
                     }
                     .padding(.all, 20)
                     Divider()
@@ -83,24 +97,28 @@ struct TrustedNetworksListView: View {
                         Spacer()
                         Button("Cancel") {
                             isAdding = false
-                            tempAddName = ""
-                            tempAddPassword = ""
                         }
                         .keyboardShortcut(.cancelAction)
                         Button("Add") {
                             selectedNetworkIndex = nil
                             isAdding = false
                             
-                            trustedNetworkSSIDs.append(tempAddName)
-                            trustedNetworkPasswords.append(tempAddPassword)
-                            tempAddName = ""
-                            tempAddPassword = ""
+                            if let selectedSavedNetworkSSID {
+                                trustedNetworkSSIDs.append(selectedSavedNetworkSSID)
+                                // An empty password means the network is joined with the settings macOS has saved
+                                trustedNetworkPasswords.append("")
+                            }
                         }
                         .keyboardShortcut(.defaultAction)
-                        .disabled(tempAddName == "" || tempAddName == wlanModel.ssid || trustedNetworkSSIDs.contains(tempAddName))
+                        .disabled(selectedSavedNetworkSSID == nil)
                     }.padding(.all, 20)
                 }
                 .frame(width: 400, alignment: .leading)
+                .onAppear {
+                    savedNetworkSSIDs = wlanModel.savedNetworkSSIDs
+                    searchText = ""
+                    selectedSavedNetworkSSID = nil
+                }
             })
             .buttonStyle(.borderless)
             Button {
